@@ -3,6 +3,9 @@
 # gtbump
 git tag bump: A simple utility to bump and manage semver git tags and generate Markdown changelogs.
 
+This is a fork of the original [repo](https://github.com/knadh/gtbump) removing the need of the `v` prefix before tags to better suit
+the current standard at Delfos.
+
 ## Install
 ```shell
 pip install gtbump
@@ -14,30 +17,30 @@ pip install gtbump
 
 # see the last tag.
 $ gtbump --show
-no tags found. Run --init to add v0.1.0
+no tags found. Run --init to add 0.1.0
 
 # add a tag for the first time.
 $ gtbump --init
-bumped v0.0.0 -> v0.1.0
+bumped 0.0.0 -> 0.1.0
 
 # bump major | minor | patch
 $ gtbump --minor
-bumped v0.1.0 -> v0.2.0
+bumped 0.1.0 -> 0.2.0
 
 $ gtbump --major
-bumped v0.2.0 -> v1.2.0
+bumped 0.2.0 -> 1.2.0
 
 # delete the last tag
 $ gtbump --delete-last
-deleted v1.2.0
+deleted 1.2.0
 
 # push the last tag upstream(or --push-last=your_remote_name)
 $ gtbump --push-last
-pushing v0.3.0 to origin
+pushing 0.3.0 to origin
 
 # generate changelog for the latest tag. This can be copy-pasted into GitHub's release description.
 $ gtbump --changelog
-changelog for v1.0.0 -> v1.1.0
+changelog for 1.0.0 -> 1.1.0
 - b361292 Display app version the settings UI
 - a3b285f Fix Buefy number input width
 - 63520d2 Merge pull request #388 from dunklesToast/chore/update-german-translations
