@@ -27,7 +27,7 @@ def run(cmd):
     if stdout:
         o = stdout.strip().decode("utf-8")
         if "No names found" in o:
-            raise Exception("no tags found. Run --init to add v0.1.0")
+            raise Exception("no tags found. Run --init to add 0.1.0")
         if "fatal" in o:
             raise Exception(o)
         return o
@@ -37,8 +37,8 @@ def get_last_tag():
     """Get the latest (closest) annotated git tag."""
     tag = run("git describe --abbrev=0 --tags")
 
-    # Parse semver tag: v0.0.0-xxxx (optional suffix).
-    match = re.search(r"^v(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", tag)
+    # Parse semver tag: 0.0.0-xxxx (optional suffix).
+    match = re.search(r"^(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", tag)
     if not match or len(match.groups()) != 5:
         raise Exception("invalid tag in non-semver format: {}".format(tag))
 
@@ -54,10 +54,10 @@ def get_all_tags():
     """Get all annotated (closest) tags by lexicographic order."""
     tags = run("git tag --sort -v:refname").split("\n")
 
-    # Parse semver tag: v0.0.0-xxxx (optional suffix).
+    # Parse semver tag: 0.0.0-xxxx (optional suffix).
     out = []
     for t in tags:
-        match = re.search(r"^v(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", t)
+        match = re.search(r"^(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", t)
         if not match or len(match.groups()) != 5:
             raise Exception("invalid tag in non-semver format: {}".format(t))
 
@@ -76,7 +76,7 @@ def bump(current, part, suffix="", strip_suffix=False):
     Given the current tag, part (major, minor ...) to bump and optional
     semver suffixes, bump the value and adds an annotated tag to the repo. 
     """
-    fmt = "v{}.{}.{}{}"
+    fmt = "{}.{}.{}{}"
     old_tag = fmt.format(
         current[MAJOR], current[MINOR], current[PATCH], current[SUFFIX])
 
@@ -113,7 +113,7 @@ def main():
 
     g = p.add_argument_group("bump").add_mutually_exclusive_group()
     g.add_argument("-init", "--init", action="store_true",
-                   dest="init", help="add tag v0.1.0 (when there are no tags)")
+                   dest="init", help="add tag 0.1.0 (when there are no tags)")
     g.add_argument("-show", "--show", action="store_true",
                    dest="show", help="show last tag")
     g.add_argument("-changelog", "--changelog", action="store_true",
@@ -123,15 +123,15 @@ def main():
     g.add_argument("-delete-last", "--delete-last", action="store_true",
                    dest="delete_last", help="delete the last tag")
     g.add_argument("-major", "--major", action="store_true",
-                   dest="major", help="bump major version (vX.0.0)")
+                   dest="major", help="bump major version (X.0.0)")
     g.add_argument("-minor", "--minor", action="store_true",
-                   dest="minor", help="bump minor version (v0.X.0)")
+                   dest="minor", help="bump minor version (0.X.0)")
     g.add_argument("-patch", "--patch", action="store_true",
-                   dest="patch", help="bump patch version (v0.0.X)")
+                   dest="patch", help="bump patch version (0.0.X)")
     args = p.parse_args()
 
     if args.version:
-        print("v{}".format(__version__))
+        print("{}".format(__version__))
         quit()
 
     # Show the last tag.
@@ -162,7 +162,7 @@ def main():
                 cmd = cmd.format(tags[0]["tag"])
             else:
                 print("changelog for {} -> {}".format(tags[1]["tag"], tags[0]["tag"]))
-                # git log --pretty="- %h %s" v1.0.0..v1.1.0
+                # git log --pretty="- %h %s" 1.0.0..1.1.0
                 cmd = cmd.format("{}..{}".format(tags[1]["tag"], tags[0]["tag"]))
 
             out = run(cmd)
