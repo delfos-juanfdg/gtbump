@@ -37,8 +37,8 @@ def get_last_tag():
     """Get the latest (closest) annotated git tag."""
     tag = run("git describe --abbrev=0 --tags")
 
-    # Parse semver tag: 0.0.0-xxxx (optional suffix).
-    match = re.search(r"^(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", tag)
+    # Parse semver tag: (v)0.0.0-xxxx (optional suffix).
+    match = re.search(r"^v?(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", tag)
     if not match or len(match.groups()) != 5:
         raise Exception("invalid tag in non-semver format: {}".format(tag))
 
@@ -54,10 +54,10 @@ def get_all_tags():
     """Get all annotated (closest) tags by lexicographic order."""
     tags = run("git tag --sort -v:refname").split("\n")
 
-    # Parse semver tag: 0.0.0-xxxx (optional suffix).
+    # Parse semver tag: (v)0.0.0-xxxx (optional suffix).
     out = []
     for t in tags:
-        match = re.search(r"^(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", t)
+        match = re.search(r"^v?(\d+)\.(\d+)\.(\d+)((\-|\+).+?)?$", t)
         if not match or len(match.groups()) != 5:
             raise Exception("invalid tag in non-semver format: {}".format(t))
 
